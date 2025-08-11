@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Tính Thông Tin Bệnh Nhân</title>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    table {
+      width: 300%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 4px;  /* Increase padding for wider columns (4 times the original) */
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+      cursor: pointer;
+    }
+    td input {
+      border: 1px solid #ddd;
+      padding: 8px;
+      border-radius: 4px;
+      resize: both;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button:disabled {
+      background-color: #d3d3d3;  /* Make the button gray when disabled */
+      cursor: not-allowed;
+    }
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+    .switcher-btn, .restore-btn {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .switcher-btn:hover, .restore-btn:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      bottom: 0;            /* Positions the footer at the bottom */
+      width: 100%;          /* Ensures it stretches across the entire width */
+      text-align: center;   /* Center the footer text */
+      padding: 10px 0;      /* Adds space around the footer content */
+      background-color: #f1f1f1;
+      font-size: 12px;      /* Smaller font for copyright text */
+    }
+
+    /* Navbar styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 2px 8px;
+  color: white;
+}
+
+.navbar .logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.navbar .logo img {
+  max-height: 40px;
+  vertical-align: middle;
+}
+
+.navbar .nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Left-align the nav items */
+  flex: 1;
+}
+
+.navbar button, .navbar a {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  margin-left: 15px;
+  padding: 8px 15px;
+}
+
+.navbar a:hover, .navbar button:hover {
+  text-decoration: underline;
+  box-shadow: 0 0 5px 2px yellow; /* Yellow box on hover */
+}
+
+.navbar .user-profile {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px; /* Reduce height */
+  border-radius: 5px; /* Optional: rounded edges */
+}
+
+.navbar .user-profile a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 5px; /* Reduce height */
+}
+
+.navbar .user-profile img {
+  max-width: 35px; /* Slightly smaller */
+  vertical-align: middle;
+}
+
+.navbar .user-profile span {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  font-size: 16px;
+  line-height: normal;
+}
+
+/* Hamburger menu */
+.hamburger-menu {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  color: white;
+}
+
+.navbar .logo img {
+  transition: outline 0.3s ease-in-out;
+}
+
+.navbar .logo img:hover {
+  outline: 3px solid yellow;
+  border-radius: 5px;
+}
+
+.sign-out-btn {
+  padding: 10px 20px;
+  background-color: #EE4B2B !important; /* Red background */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+.sign-out-btn:hover {
+  background-color: #EE4B2B !important; /* Keep the red color even on hover */
+}
+
+/* Make the nav-links hidden on small screens */
+@media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+  }
+
+  .hamburger-menu {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 60px;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background-color: #333;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 1000;
+  }
+
+  .show {
+    display: flex !important;
+  }
+
+  .nav-links button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #555;
+    background: none;
+    color: white;
+  }
+
+  .nav-links button:hover {
+    background-color: #444;
+  }
+}
+
+  </style>
+</head>
+<body>
+   <!-- Navbar -->
+<div class="navbar">
+  <!-- Hamburger Menu Button -->
+  <button class="hamburger-menu" onclick="toggleMenu()">
+    ☰ <!-- Unicode for the hamburger icon -->
+  </button>
+
+  <!-- Navigation Links -->
+  <div class="logo">
+    <img src="https://lh3.googleusercontent.com/pw/AP1GczPpTav2YZIazXoF0EEND4Qn68CLQed1Bz6qzpiJdWIaoUnRDd7t-j2TLiaYp2TjBkGaMvX0LaiHJXRRGgRt_FC_iEr92rEBoHmWaWAY5RsCzIbLtw=w2400" alt="Go to Home Page" onclick="redirectToMenuPage()" style="cursor: pointer;">
+  </div>
+  <div class="nav-links" id="nav-links">
+    <button class="add-contact-btn" onclick="redirectToAddContactPage()">Thêm/Chỉnh sửa thông tin bệnh nhân</button>
+    <button id="export-btn" onclick="exportToExcel()">Xuất file Excel</button>
+    <button id="open-spreadsheet-btn" onclick="openSpreadsheet()">Mở Bảng Tính</button>
+    <button class="print-btn" onclick="redirectToPrintPage()">In thông tin bệnh nhân</button>
+  </div>
+  <!-- User Profile Link, aligned to the right -->
+  <div class="user-profile">
+    <a href="#" onclick="redirectToUserPage()">
+      <img src="https://lh3.googleusercontent.com/pw/AP1GczM9aPhk8Ohjr-yVBoDLDDjYTP7uVyIaxLJBcuAc_k2YGL1V1ZXcoqPiZYzI9HNjDabRzsEqpP7ZF2Pktfo4yDXtefEdfrkyfihDyCh7ZFeqGrqVNw=w2400" alt="User Profile" style="max-width: 40px;" />
+      <span id="user-name">Loading...</span>
+    </a>
+    <button class="sign-out-btn" onclick="redirectToIndexPage()">Đăng Xuất</button>
+  </div>
+</div>
+  <h1>Bảng Tính Thông Tin Bệnh Nhân</h1>
+
+  <div class="container">
+
+    <!-- Add this button right before or after the Save Changes button -->
+    <button class="return-btn" onclick="redirectToMenu()">Quay lại Tra cứu</button>
+
+    <button class="switcher-btn" onclick="togglePage()">Đổi sang Thông tin Gia Đình</button>
+    <button class="restore-btn" onclick="restoreDefaultOrder()">Chuyển Thứ Tự Sắp Xếp về Mặc Định</button>
+
+    <!-- Bệnh Nhân Table -->
+    <div class="tab active" id="benhNhanPage" style="overflow-x: auto;">
+      <h2>Thông Tin Bệnh Nhân</h2>
+      <button onclick="addRow('benhNhanTable')">Thêm Hàng trong Bảng Tính</button>
+      <table id="benhNhanTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0, 'benhNhanTable')">ID Bệnh Nhân</th>
+            <th onclick="sortTable(1, 'benhNhanTable')">ID Gia Đình</th>
+            <th onclick="sortTable(2, 'benhNhanTable')">ID Chế Độ Chính Sách</th>
+            <th onclick="sortTable(3, 'benhNhanTable')">ID Lớp Học</th>
+            <th onclick="sortTable(4, 'benhNhanTable')">ID Các Hỗ Trợ Của Làng</th>
+            <th onclick="sortTable(5, 'benhNhanTable')">ID Bệnh Án</th>
+            <th onclick="sortTable(6, 'benhNhanTable')">ID Đánh Giá</th>
+            <th onclick="sortTable(7, 'benhNhanTable')">Họ và Tên</th>
+            <th onclick="sortTable(8, 'benhNhanTable')">Ngày Sinh</th>
+            <th onclick="sortTable(9, 'benhNhanTable')">Giới Tính</th>
+            <th onclick="sortTable(10, 'benhNhanTable')">Địa Chỉ Gia Đình</th>
+            <th onclick="sortTable(11, 'benhNhanTable')">Số Định Danh Cá Nhân</th>
+            <th onclick="sortTable(12, 'benhNhanTable')">Đối Tượng, Thế Hệ Thứ</th>
+            <th onclick="sortTable(13, 'benhNhanTable')">Hộ Khẩu</th>
+            <th onclick="sortTable(14, 'benhNhanTable')">Ngày Tiếp Nhận</th>
+            <th onclick="sortTable(15, 'benhNhanTable')">Ngày Hòa Nhập</th>
+          </tr>
+        </thead>
+        <tbody id="benhNhanData">
+          <!-- Dynamic rows will be added here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Gia Đình Table -->
+    <div class="tab" id="giaDinhPage">
+      <h2>Thông Tin Gia Đình Bệnh Nhân</h2>
+      <button onclick="addRow('giaDinhTable')">Thêm Hàng trong Bảng Tính</button>
+      <table id="giaDinhTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0, 'giaDinhTable')">ID Gia Đình</th>
+            <th onclick="sortTable(1, 'giaDinhTable')">ID Bệnh Nhân</th>
+            <th onclick="sortTable(2, 'giaDinhTable')">Họ và Tên Bố</th>
+            <th onclick="sortTable(3, 'giaDinhTable')">Họ và Tên Mẹ</th>
+            <th onclick="sortTable(4, 'giaDinhTable')">SĐT Liên Hệ</th>
+            <th onclick="sortTable(5, 'giaDinhTable')">Nghề Nghiệp Bố</th>
+            <th onclick="sortTable(6, 'giaDinhTable')">Nghề Nghiệp Mẹ</th>
+            <th onclick="sortTable(7, 'giaDinhTable')">Địa Chỉ</th>
+            <th onclick="sortTable(8, 'giaDinhTable')">Thông Tin Người Giám Hộ</th>
+          </tr>
+        </thead>
+        <tbody id="giaDinhData">
+          <!-- Dynamic rows will be added here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Save Button -->
+    <button onclick="saveData()" id="saveBtn">Lưu</button>
+  </div>
+  
+	<footer>
+    <small>
+      Copyright © 2025 Đại Vũ Hoàng Triều. All Rights Reserved.
+    </small>
+  </footer>
+  
+  <script>
+    //Generate the name that would replace the logic in the page Ex: BN00001
+    window.onload = function() {
+    let navLinks = document.getElementById("nav-links");
+
+    if (window.innerWidth > 768) {
+        navLinks.style.display = "flex";
+    } else {
+        navLinks.style.display = "none";
+    }
+
+    google.script.run.withSuccessHandler(function(response) {
+        console.log(response);
+        document.getElementById('user-name').textContent = response;  
+    }).getUserInfo();  
+
+    loadAllContacts();  
+    fetchData(); // Added fetchData() here
+};
+
+
+    function toggleMenu() {
+  let navLinks = document.getElementById("nav-links");
+
+  if (navLinks.classList.contains("show")) {
+    navLinks.classList.remove("show");
+  } else {
+    navLinks.classList.add("show");
+  }
+}
+
+
+    // Function to restore the rows to the default order from the Google Sheet
+    function restoreDefaultOrder() {
+      // Clear the current content to refresh
+      const benhNhanTable = document.getElementById('benhNhanData');
+      const giaDinhTable = document.getElementById('giaDinhData');
+      
+      // Clear existing rows
+      benhNhanTable.innerHTML = ''; 
+      giaDinhTable.innerHTML = ''; 
+      
+      // Redirect to the edit_contacts.html page (using Google Apps Script)
+      google.script.run.withSuccessHandler(function(html) {
+        document.open();
+        document.write(html);
+        document.close();
+      }).getedit_contacts(); // This is the method you mentioned for redirecting
+    }
+    // Function to redirect to the Menu page
+    function redirectToMenu() {
+      google.script.run.withSuccessHandler(function(html) {
+        document.open();
+        document.write(html);
+        document.close();
+      }).getMenuPage();  // Adjust the function name if necessary
+    }
+
+    // Function to fetch data from Google Sheets and populate the tables
+    function fetchData() {
+      // Fetch 'Bệnh Nhân' data
+      google.script.run.withSuccessHandler(function(benhNhanData) {
+        const benhNhanTable = document.getElementById('benhNhanData');
+        benhNhanTable.innerHTML = '';
+        originalOrderBenhNhan = [];
+
+        // Rebuild table with data from Google Sheet
+        benhNhanData.forEach((row, index) => {
+          const tr = document.createElement('tr');
+          row.forEach(cell => {
+            const td = document.createElement('td');
+            const input = document.createElement('input');
+            input.value = cell;
+            td.appendChild(input);
+            tr.appendChild(td);
+          });
+          benhNhanTable.appendChild(tr);
+          originalOrderBenhNhan.push(index); // Keep track of original order
+        });
+      }).getBenhNhanData();
+
+      // Fetch 'Gia Đình' data
+      google.script.run.withSuccessHandler(function(giaDinhData) {
+        const giaDinhTable = document.getElementById('giaDinhData');
+        giaDinhTable.innerHTML = '';
+        originalOrderGiaDinh = [];
+
+        // Rebuild table with data from Google Sheet
+        giaDinhData.forEach((row, index) => {
+          const tr = document.createElement('tr');
+          row.forEach(cell => {
+            const td = document.createElement('td');
+            const input = document.createElement('input');
+            input.value = cell;
+            td.appendChild(input);
+            tr.appendChild(td);
+          });
+          giaDinhTable.appendChild(tr);
+          originalOrderGiaDinh.push(index); // Keep track of original order
+        });
+      }).getGiaDinhData();
+    }
+
+    // Function to add a new row to the table
+    function addRow(tableId) {
+      const table = document.getElementById(tableId);
+      const newRow = table.insertRow();
+      const numColumns = table.rows[0].cells.length;
+      for (let i = 0; i < numColumns; i++) {
+        const newCell = newRow.insertCell(i);
+        const input = document.createElement('input');
+        newCell.appendChild(input);
+      }
+    }
+
+    // Function to save data to Google Sheets in the original order
+    function saveData() {
+      const benhNhanData = [];
+      originalOrderBenhNhan.forEach(index => {
+        const row = document.querySelectorAll('#benhNhanData tr')[index];
+        const rowData = [];
+        row.querySelectorAll('td input').forEach(input => {
+          rowData.push(input.value);
+        });
+        benhNhanData.push(rowData);
+      });
+
+      const giaDinhData = [];
+      originalOrderGiaDinh.forEach(index => {
+        const row = document.querySelectorAll('#giaDinhData tr')[index];
+        const rowData = [];
+        row.querySelectorAll('td input').forEach(input => {
+          rowData.push(input.value);
+        });
+        giaDinhData.push(rowData);
+      });
+
+      google.script.run.updateBenhNhanData(benhNhanData);
+      google.script.run.updateGiaDinhData(giaDinhData);
+    }
+
+    // Function to toggle between pages (tables)
+    function togglePage() {
+      const benhNhanPage = document.getElementById('benhNhanPage');
+      const giaDinhPage = document.getElementById('giaDinhPage');
+      const switcherBtn = document.querySelector('.switcher-btn');
+
+      if (benhNhanPage.classList.contains('active')) {
+        benhNhanPage.classList.remove('active');
+        giaDinhPage.classList.add('active');
+        switcherBtn.textContent = 'Đổi sang Thông tin Bệnh Nhân';
+      } else {
+        benhNhanPage.classList.add('active');
+        giaDinhPage.classList.remove('active');
+        switcherBtn.textContent = 'Đổi sang Thông tin Gia Đình';
+      }
+    }
+
+    // Function to sort the table by column index (sort only in the UI, not in the sheet)
+    function sortTable(columnIndex, tableId) {
+      const table = document.getElementById(tableId);
+      const rows = Array.from(table.rows).slice(1);
+
+      // Sort rows based on the column index
+      rows.sort((rowA, rowB) => {
+        const cellA = rowA.cells[columnIndex].querySelector('input').value;
+        const cellB = rowB.cells[columnIndex].querySelector('input').value;
+        return cellA.localeCompare(cellB);
+      });
+
+      // Reattach rows in sorted order
+      rows.forEach(row => table.appendChild(row));
+
+      // Disable editing and disable the Save Changes button after sorting
+      disableEditing(tableId);
+    }
+
+    // Function to disable editing in the table and disable the Save Changes button
+    function disableEditing(tableId) {
+      const table = document.getElementById(tableId);
+      const inputs = table.querySelectorAll('input');
+      
+      // Disable all input fields in the table
+      inputs.forEach(input => input.disabled = true);
+      
+      // Disable the Save Changes button
+      const saveButton = document.querySelector('button[onclick="saveData()"]');
+      saveButton.disabled = true;
+    }
+
+    // Call fetchData when the page loads
+    //window.onload = fetchData;
+  </script>
+</body>
+</html>
