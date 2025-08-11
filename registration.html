@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trang Đăng Kí</title>
+  <style>
+    /* Style for the body: Sets the background image, covers the entire view, centers content */
+    body {
+      background-image: url('https://lh3.googleusercontent.com/pw/AP1GczNpfRNxc5FT7e8jgU8WgEK1ywvw0Iy73Y2sCxuIeomYjIVQ46ir5-QGLQ3IYg4Epy205U_Fbesh7HF4EVgwHAAjBW22gw2vDU2P52VtbKYareO39A=w2400');
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Style for the container: White background, padding, rounded borders, shadow, and specific width */
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px;
+    }
+
+    /* Style for the logo: Centers the logo image within its container */
+    .logo {
+      background-image: url('https://lh3.googleusercontent.com/pw/AP1GczPpTav2YZIazXoF0EEND4Qn68CLQed1Bz6qzpiJdWIaoUnRDd7t-j2TLiaYp2TjBkGaMvX0LaiHJXRRGgRt_FC_iEr92rEBoHmWaWAY5RsCzIbLtw=w2400');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 100px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logo container -->
+    <div class="logo"></div>
+
+    <!-- Page Title -->
+    <h1>Đăng Kí</h1>
+
+    <!-- Registration Form -->
+    <form id="registration-form">
+      <label for="new-email">Tên đăng nhập:</label><br>
+      <input type="email" id="new-email" name="email"><br>
+      <label for="new-pwd">Mật khẩu</label><br>
+      <input type="password" id="new-pwd" name="password"><br><br>
+      <input type="button" value="Đăng Kí" onclick="registerUser()">
+    </form>
+
+    <!-- Link to Login Page -->
+    <p>Đã có Tài Khoản? <a href="#" onclick="loadLogin()">Đăng nhập</a></p>
+
+    <!-- Scripts for handling registration and loading the login page -->
+    <script>
+      // Function to handle user registration
+      function registerUser() {
+        var email = document.getElementById('new-email').value;
+        var password = document.getElementById('new-pwd').value;
+        // Calls the server-side function to register the new user
+        google.script.run.withSuccessHandler(function(){
+            loadLogin(); // Redirects to login page after successful registration
+        }).registerNewUser(email, password);
+      }
+
+      // Function to load the login page
+      function loadLogin() {
+        // Calls the server-side function to retrieve the login page content
+        google.script.run.withSuccessHandler(function(html) {
+          document.open();
+          document.write(html);
+          document.close();
+        }).getLoginPage();
+      }
+
+      // Add event listener to the form for "Enter" key press
+      document.getElementById('login-form').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          // Trigger the button click if "Enter" is pressed
+          document.querySelector('input[type="button"]').click();
+        }
+      });
+    </script>
+  </div>
+</body>
+</html>
