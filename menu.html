@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+  	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra Cứu Thông Tin Bệnh Nhân</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        background-color: #f7f7f7;
+      }
+
+      /* Navbar styling */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #333;
+        padding: 2px 8px;
+        color: white;
+      }
+
+      
+      .navbar .logo {
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+      }
+
+      .navbar .logo img {
+        max-height: 40px;
+        vertical-align: middle;
+      }
+
+      .navbar .nav-links {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Left-align the nav items */
+        flex: 1;
+      }
+
+      .navbar button, .navbar a {
+        background-color: transparent;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-left: 15px;
+        padding: 8px 15px;
+      }
+
+      .navbar a:hover, .navbar button:hover {
+        text-decoration: underline;
+        box-shadow: 0 0 5px 2px yellow; /* Yellow box on hover */
+      }
+
+      .navbar .user-profile {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px; /* Reduce height */
+  border-radius: 5px; /* Optional: rounded edges */
+}
+
+.navbar .user-profile a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 5px; /* Reduce height */
+}
+
+.navbar .user-profile img {
+  max-width: 35px; /* Slightly smaller */
+  vertical-align: middle;
+}
+
+.navbar .user-profile span {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  font-size: 16px;
+  line-height: normal;
+}
+
+/* Add an outline on hover for the logo */
+.navbar .logo img {
+  transition: outline 0.3s ease-in-out;
+}
+
+.navbar .logo img:hover {
+  outline: 3px solid yellow;
+  border-radius: 5px;
+}
+
+      .sign-out-btn {
+        padding: 10px 20px;
+        background-color: #EE4B2B !important; /* Red background */
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+      }
+
+      .sign-out-btn:hover {
+        background-color: #EE4B2B !important; /* Keep the red color even on hover */
+      }
+
+      .search-container {
+        margin-top: 30px;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        width: 300px;
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      .results {
+        margin-top: 30px;
+        text-align: left;
+        display: inline-block;
+        width: 80%;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .contact-box {
+        padding: 20px;
+        margin: 10px 0;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        max-width: 100%;
+      }
+
+      .contact-box .contact-details {
+        font-size: 16px;
+      }
+
+      .result-item {
+        padding: 10px;
+        margin: 5px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      footer {
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        background-color: #f1f1f1;
+        font-size: 12px;
+      }
+
+      #loading-message {
+        display: none;
+        font-size: 16px;
+        color: #000;
+        margin-top: 20px;
+      }
+      
+      /* Hide the hamburger menu on large screens */
+.hamburger-menu {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  color: white;
+}
+
+/* Make the nav-links hidden on small screens */
+@media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+  }
+
+  .hamburger-menu {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 60px;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .nav-links {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background-color: #333;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.show {
+  display: flex !important;
+}
+
+  .nav-links button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #555;
+    background: none;
+    color: white;
+  }
+
+  .nav-links button:hover {
+    background-color: #444;
+  }
+}
+
+
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+    <!-- Hamburger Menu Button -->
+<button class="hamburger-menu" onclick="toggleMenu()">
+  ☰ <!-- Unicode for the hamburger icon -->
+</button>
+
+<!-- Navigation Links -->
+      <div class="logo">
+        <img src="https://lh3.googleusercontent.com/pw/AP1GczPpTav2YZIazXoF0EEND4Qn68CLQed1Bz6qzpiJdWIaoUnRDd7t-j2TLiaYp2TjBkGaMvX0LaiHJXRRGgRt_FC_iEr92rEBoHmWaWAY5RsCzIbLtw=w2400" alt="Go to Home Page" onclick="redirectToMenuPage()" style="cursor: pointer;">
+      </div>
+      <div class="nav-links" id="nav-links">
+        <button class="add-contact-btn" onclick="redirectToAddContactPage()">Thêm/Chỉnh sửa thông tin bệnh nhân</button>
+        <button id="export-btn" onclick="exportToExcel()">Xuất file Excel</button>
+        <button id="open-spreadsheet-btn" onclick="openSpreadsheet()">Mở Cơ Sở Dữ Liệu</button>
+        <button class="print-btn" onclick="redirectToPrintPage()">In thông tin bệnh nhân</button>
+      </div>
+      <!-- User Profile Link, aligned to the right -->
+      <div class="user-profile">
+        <a href="#" onclick="redirectToUserPage()">
+          <img src="https://lh3.googleusercontent.com/pw/AP1GczM9aPhk8Ohjr-yVBoDLDDjYTP7uVyIaxLJBcuAc_k2YGL1V1ZXcoqPiZYzI9HNjDabRzsEqpP7ZF2Pktfo4yDXtefEdfrkyfihDyCh7ZFeqGrqVNw=w2400" alt="User Profile" style="max-width: 40px;" />
+          <span id="user-name">Loading...</span>
+        </a>
+        <button class="sign-out-btn" onclick="redirectToIndexPage()">Đăng Xuất</button>
+      </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-container">
+      <h1>Tra Cứu Thông Tin Bệnh Nhân</h1>
+      <input type="text" id="search-query" placeholder="Nhập tên bệnh nhân..." oninput="handleSearch(event)" />
+    </div>
+
+    <!-- Results Section -->
+    <div class="results" id="search-results"></div>
+
+    <!-- Loading Message -->
+    <div id="loading-message">Vui lòng đợi xuất dữ liệu đến Excel...</div>
+
+    <!-- Footer -->
+    <footer>
+      <small>
+        Copyright © 2025 Đại Vũ Hoàng Triều. All Rights Reserved.
+      </small>
+    </footer>
+
+    <script>
+      // Simulate getting logged-in user's name (you would replace this with actual logic)
+
+      window.onload = function() {
+      let navLinks = document.getElementById("nav-links");
+
+      if (window.innerWidth > 768) {
+        navLinks.style.display = "flex";
+      } else {
+        navLinks.style.display = "none";
+      }
+
+      google.script.run.withSuccessHandler(function(response) {
+        console.log(response);
+        document.getElementById('user-name').textContent = response;  
+      }).getUserInfo();  
+
+      loadAllContacts();
+    };
+
+      function handleSearch(event) {
+        const query = event.target.value;
+        google.script.run.withSuccessHandler(displayResults).search(query);
+      }
+
+      function displayResults(results) {
+        if (!Array.isArray(results)) {
+          results = [];
+        }
+
+        const resultsDiv = document.getElementById('search-results');
+        resultsDiv.innerHTML = '';
+
+        if (results.length > 0) {
+          results.forEach(result => {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('contact-box'); // Add the box class here
+            resultItem.innerHTML = `
+              <div class="contact-details">
+                <strong>ID Bệnh Nhân:</strong> ${result.id_benh_nhan || 'N/A'}<br>
+                <strong>Họ và Tên:</strong> ${result.name || 'N/A'}<br>
+              </div>
+              <button onclick="toggleDetails(event)">Show Details</button>
+              <div class="collapsible">
+                <div class="collapsible-content">
+                  <strong>ID Gia Đình:</strong> ${result.id_gia_dinh || 'N/A'}<br>
+                  <strong>ID Chế Độ Chính Sách:</strong> ${result.id_che_do_chinh_sach || 'N/A'}<br>
+                </div>
+              </div>
+            `;
+            resultsDiv.appendChild(resultItem);
+          });
+        } else {
+          resultsDiv.innerHTML = '<p>No results found.</p>';
+        }
+      }
+
+      function toggleDetails(event) {
+        const collapsible = event.target.nextElementSibling;
+        if (collapsible.style.display === 'none' || collapsible.style.display === '') {
+          collapsible.style.display = 'block';
+          event.target.textContent = 'Hide Details';
+        } else {
+          collapsible.style.display = 'none';
+          event.target.textContent = 'Show Details';
+        }
+      }
+
+      function redirectToAddContactPage() {
+        google.script.run.withSuccessHandler(function(html) {
+          document.open();
+          document.write(html);
+          document.close();
+        }).getedit_contacts();
+      }
+
+      function redirectToPrintPage() {
+        google.script.run.withSuccessHandler(function(html) {
+          document.open();
+          document.write(html);
+          document.close();
+        }).getPrintPage();
+      }
+
+      function redirectToMenuPage() {
+        google.script.run.withSuccessHandler(function(html) {
+          document.open();
+          document.write(html);
+          document.close();
+        }).getMenuPage();
+      }
+
+      function redirectToUserPage() {
+        google.script.run.withSuccessHandler(function(html) {
+          document.open();
+          document.write(html);
+          document.close();
+        }).getUPg();
+      }
+
+
+
+      function loadAllContacts() {
+        google.script.run.withSuccessHandler(displayResults).getAllContacts();
+      }
+
+      function exportToExcel() {
+        document.getElementById('loading-message').style.display = 'block';
+
+        google.script.run.withSuccessHandler(function(url) {
+          document.getElementById('loading-message').style.display = 'none';
+
+          if (url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Exported_Data.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            alert("Error: Unable to generate the file.");
+          }
+        }).exportToExcel();
+      }
+
+
+      function openSpreadsheet() {
+        const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1f13jrA8DtDWpjpWgxuBSV98_vrkMyIy9vVBnyYuJ_D0/edit?gid=2098751485#gid=2098751485';
+        window.open(spreadsheetUrl, '_blank');
+      }
+
+      function redirectToIndexPage() {
+        google.script.run.withSuccessHandler(function(html) {
+          document.open();
+          document.write(html);
+          document.close();
+        }).getIndex();
+      }
+      
+      function toggleMenu() {
+        let navLinks = document.getElementById("nav-links");
+
+        if (navLinks.classList.contains("show")) {
+          navLinks.classList.remove("show");
+        } else {
+          navLinks.classList.add("show");
+        }
+      }
+
+
+
+
+    </script>
+  </body>
+</html>
