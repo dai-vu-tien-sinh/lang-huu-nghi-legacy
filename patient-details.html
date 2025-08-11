@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Bệnh Nhân</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f7f7f7; }
+        .container { max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; }
+        img { max-width: 150px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Thông Tin Bệnh Nhân</h2>
+        <img id="profile-pic" src="" alt="Profile Picture">
+        <p><strong>ID:</strong> <span id="id"></span></p>
+        <p><strong>Họ và Tên:</strong> <span id="name"></span></p>
+        <p><strong>Ngày Sinh:</strong> <span id="birthDate"></span></p>
+        <p><strong>Giới Tính:</strong> <span id="gender"></span></p>
+        <p><strong>Địa Chỉ:</strong> <span id="address"></span></p>
+        <p><strong>Thông Tin Gia Đình:</strong> <span id="guardianInfo"></span></p>
+    </div>
+    <script>
+        function loadPatientDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const patientId = params.get('id');
+            if (!patientId) return;
+
+            google.script.run.withSuccessHandler(displayDetails).getPatientDetails(patientId);
+        }
+
+        function displayDetails(data) {
+            if (!data) return;
+            document.getElementById('id').textContent = data.id;
+            document.getElementById('name').textContent = data.name;
+            document.getElementById('birthDate').textContent = data.birthDate;
+            document.getElementById('gender').textContent = data.gender;
+            document.getElementById('address').textContent = data.address;
+            document.getElementById('guardianInfo').textContent = data.guardianInfo || "Không có thông tin";
+        }
+
+        window.onload = loadPatientDetails;
+    </script>
+</body>
+</html>
