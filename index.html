@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Đăng Nhập</title>
+  <style>
+    body {
+      background-image: url('https://lh3.googleusercontent.com/pw/AP1GczNpfRNxc5FT7e8jgU8WgEK1ywvw0Iy73Y2sCxuIeomYjIVQ46ir5-QGLQ3IYg4Epy205U_Fbesh7HF4EVgwHAAjBW22gw2vDU2P52VtbKYareO39A=w2400');
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px;
+    }
+
+    .logo {
+      background-image: url('https://lh3.googleusercontent.com/pw/AP1GczPpTav2YZIazXoF0EEND4Qn68CLQed1Bz6qzpiJdWIaoUnRDd7t-j2TLiaYp2TjBkGaMvX0LaiHJXRRGgRt_FC_iEr92rEBoHmWaWAY5RsCzIbLtw=w2400');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 100px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+      background-color: #f1f1f1;
+      font-size: 12px;
+    }
+
+    /* Styling for the loading message */
+    #loading-message {
+      display: none;
+      font-size: 16px;
+      color: #000;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo"></div>
+    <h1>Đăng Nhập</h1>
+
+    <!-- Login Form -->
+    <form id="login-form" onsubmit="event.preventDefault(); validateLogin();">
+      <label for="email">Tên Đăng Nhập</label><br>
+      <input type="email" id="email" name="email"><br>
+      <label for="pwd">Mật Khẩu:</label><br>
+      <input type="password" id="pwd" name="password"><br><br>
+      <input type="button" value="Đăng Nhập" onclick="validateLogin()">
+    </form>
+
+    <p>Chưa có tài khoản? <a href="#" onclick="loadRegistration()">Đăng kí!</a></p>
+
+    <!-- Loading message -->
+    <div id="loading-message">Đang đăng nhập...</div>
+
+    <script>
+      // Function to validate login credentials
+      function validateLogin() {
+        // Show the loading message
+        document.getElementById('loading-message').style.display = 'block';
+
+        google.script.run.withSuccessHandler(function(response) {
+          // Hide the loading message after getting the response
+          document.getElementById('loading-message').style.display = 'none';
+
+          if (response) {
+            // Redirects to the menu page if login is successful
+            google.script.run.withSuccessHandler(function(html) {
+              document.open();
+              document.write(html);
+              document.close();
+            }).getMenuPage();
+          } else {
+            // Shows an alert if credentials are invalid
+            window.alert('Sai thông tin đăng nhập!!!');
+          }
+        }).checkLogin(document.getElementById('email').value, document.getElementById('pwd').value);
+      }
+
+      // Function to load the registration page
+      function loadRegistration() {
+        google.script.run.withSuccessHandler(function(html) {
+          document.open();
+          document.write(html);
+          document.close();
+        }).getRegistrationPage();
+      }
+
+      // Add event listener to the form for "Enter" key press
+      document.getElementById('login-form').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          // Trigger the button click if "Enter" is pressed
+          document.querySelector('input[type="button"]').click();
+        }
+      });
+    </script>
+  </div>
+  
+  <footer>
+    <small>
+      Copyright © 2025 Đại Vũ Hoàng Triều. All Rights Reserved.
+    </small>
+  </footer>
+</body>
+</html>
